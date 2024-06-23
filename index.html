@@ -1,152 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plant Monitor</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-        .data-container {
-            width: 80%;
-            margin-top: 20px;
-        }
-        .plant-image {
-            max-width: 100%;
-            height: auto;
-        }
-        .navigation {
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-between;
-            width: 80%;
-        }
-        .arrow {
-            cursor: pointer;
-            font-size: 24px;
-            margin: 0 10px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Plant Data Monitor</h1>
-        <div class="data-container">
-            <img src="plant-image.jpg" alt="Растение" class="plant-image" id="plantImage">
-            <table id="plantData">
-                <tr>
-                    <th>Temperature (°C)</th>
-                    <td id="temperature">5</td>
-                </tr>
-                <tr>
-                    <th>Humidity (%)</th>
-                    <td id="humidity">6</td>
-                </tr>
-                <tr>
-                    <th>Battery Level (%)</th>
-                    <td id="battery_level">50</td>
-                </tr>
-                <tr>
-                    <th>Timestamp</th>
-                    <td id="timestamp">2024-06-25 15:00:00</td>
-                </tr>
-            </table>
-        </div>
-        <div class="navigation">
-            <span class="arrow" id="prev">&lt; Предыдущий</span>
-            <span class="arrow" id="next">Следующий &gt;</span>
-        </div>
-    </div>
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
-    <script>
-        // Конфигурация Firebase, перенесенная из config.js
-       
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+<script>
+ 
 
-        // Firebase references
-        var database = firebase.database();
-        var plantDataRef = database.ref('/plant_data');
+    // Инициализация Firebase
+    firebase.initializeApp(firebaseConfig);
 
-        // Данные о разных растениях (для примера)
-        const plantData = [
-            {
-                temperature: 25,
-                humidity: 65,
-                battery_level: 50,
-                timestamp: "2024-06-25 12:05:00",
-                imageUrl: "plant-image.jpg"
-            },
-            {
-                temperature: 28,
-                humidity: 60,
-                battery_level: 55,
-                timestamp: "2024-06-25 14:00:00",
-                imageUrl: "plant-image2.jpg"
-            }
-            // Добавьте данные о других растениях здесь
-        ];
+    // Ссылка на базу данных Firebase
+    var database = firebase.database();
+    var plantDataRef = database.ref('/plant_data');
 
-        let currentIndex = 0;
-        const plantImage = document.getElementById("plantImage");
-        const temperatureElem = document.getElementById("temperature");
-        const humidityElem = document.getElementById("humidity");
-        const batteryLevelElem = document.getElementById("battery_level");
-        const timestampElem = document.getElementById("timestamp");
-
-        function updatePlantData(index) {
-            const data = plantData[index];
-            plantImage.src = data.imageUrl;
-            temperatureElem.textContent = data.temperature;
-            humidityElem.textContent = data.humidity;
-            batteryLevelElem.textContent = data.battery_level;
-            timestampElem.textContent = data.timestamp;
+    // Данные о разных растениях (для примера)
+    const plantData = [
+        {
+            temperature: 25,
+            humidity: 65,
+            battery_level: 50,
+            timestamp: "2024-06-25 11:00:00",
+            imageUrl: "plant-image.jpg"
+        },
+        {
+            temperature: 28,
+            humidity: 40,
+            battery_level: 55,
+            timestamp: "2024-06-25 14:00:00",
+            imageUrl: "plant-image2.jpg"
         }
+        // Добавьте данные о других растениях здесь
+    ];
 
-        // Инициализация данных
+    let currentIndex = 0;
+    const plantImage = document.getElementById("plantImage");
+    const temperatureElem = document.getElementById("temperature");
+    const humidityElem = document.getElementById("humidity");
+    const batteryLevelElem = document.getElementById("battery_level");
+    const timestampElem = document.getElementById("timestamp");
+
+    function updatePlantData(index) {
+        const data = plantData[index];
+        plantImage.src = data.imageUrl;
+        temperatureElem.textContent = data.temperature;
+        humidityElem.textContent = data.humidity;
+        batteryLevelElem.textContent = data.battery_level;
+        timestampElem.textContent = data.timestamp;
+    }
+
+    // Инициализация данных
+    updatePlantData(currentIndex);
+
+    // Обработчики для стрелок вправо и влево
+    document.getElementById("prev").addEventListener("click", function() {
+        currentIndex = (currentIndex - 1 + plantData.length) % plantData.length;
         updatePlantData(currentIndex);
+    });
 
-        // Обработчики для стрелок вправо и влево
-        document.getElementById("prev").addEventListener("click", function() {
-            currentIndex = (currentIndex - 1 + plantData.length) % plantData.length;
-            updatePlantData(currentIndex);
-        });
+    document.getElementById("next").addEventListener("click", function() {
+        currentIndex = (currentIndex + 1) % plantData.length;
+        updatePlantData(currentIndex);
+    });
 
-        document.getElementById("next").addEventListener("click", function() {
-            currentIndex = (currentIndex + 1) % plantData.length;
-            updatePlantData(currentIndex);
-        });
-
-        // Слушаем изменения в базе данных Firebase
-        plantDataRef.on('value', function (snapshot) {
-            var data = snapshot.val();
-            updatePlantData(currentIndex); // Обновляем текущие данные при изменении в Firebase
-        });
-    </script>
-</body>
-</html>
+    // Слушаем изменения в базе данных Firebase
+    plantDataRef.on('value', function (snapshot) {
+        var data = snapshot.val();
+        updatePlantData(currentIndex); // Обновляем текущие данные при изменении в Firebase
+    });
+</script>
