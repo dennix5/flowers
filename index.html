@@ -1,31 +1,111 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plant Monitor</title>
+    <title>Smart Plant Soil Moisture Monitor</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
         }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #4CAF50;
+        }
+
+        .plant-image {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            display: block;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
+
+        th,
+        td {
             padding: 10px;
             text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.8em;
+            color: #888;
         }
     </style>
-    <!-- Подключение Firebase SDK -->
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Smart Plant Soil Moisture Monitor</h1>
+            <img src="plant-image.jpg" alt="Plant" class="plant-image">
+        </header>
+
+        <table>
+            <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Temperature (°C)</td>
+                <td id="temperature">--</td>
+            </tr>
+            <tr>
+                <td>Humidity (%)</td>
+                <td id="humidity">--</td>
+            </tr>
+            <tr>
+                <td>Soil Moisture (%)</td>
+                <td id="soil-moisture">--</td>
+            </tr>
+            <tr>
+                <td>Last Update</td>
+                <td id="last-update">--</td>
+            </tr>
+        </table>
+
+        <div class="footer">
+            &copy; 2024 Smart Plant Soil Monitor. All rights reserved.
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
     <script>
-        // Конфигурация Firebase, перенесенная из config.js
+// Конфигурация Firebase, перенесенная из config.js
         var firebaseConfig = {
             apiKey: "AIzaSyDglK2TjHEchfN23w5b5cW1ytiXqlYpBQs",
             authDomain: "flowers-8ef09.firebaseapp.com",
@@ -35,46 +115,28 @@
             messagingSenderId: "your_firebase_messaging_sender_id",
             appId: "1:155445589489:web:dc7f1a5c3064b3f282e5c5"
         };
-
-        // Инициализация Firebase
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
 
-        function getPlantData() {
-            var database = firebase.database();
-            var ref = database.ref('/plant_data');
-            ref.on('value', function(snapshot) {
-                var data = snapshot.val();
-                document.getElementById('temperature').innerText = data.temperature;
-                document.getElementById('humidity').innerText = data.humidity;
-                document.getElementById('battery_level').innerText = data.battery_level;
-                document.getElementById('timestamp').innerText = data.timestamp;
-            });
+        // Firebase references
+        var database = firebase.database();
+        var plantDataRef = database.ref('/plant_data');
+
+        // Function to update data on the web page
+        function updateData(data) {
+            document.getElementById('temperature').innerText = data.temperature || '--';
+            document.getElementById('humidity').innerText = data.humidity || '--';
+            document.getElementById('soil-moisture').innerText = data.soil_moisture || '--';
+            document.getElementById('last-update').innerText = data.timestamp || '--';
         }
 
-        window.onload = function() {
-            getPlantData();
-        }
+        // Listening for changes in Firebase database
+        plantDataRef.on('value', function (snapshot) {
+            var data = snapshot.val();
+            updateData(data);
+        });
     </script>
-</head>
-<body>
-    <h1>Plant Data Monitor</h1>
-    <table>
-        <tr>
-            <th>Temperature (°C)</th>
-            <td id="temperature"></td>
-        </tr>
-        <tr>
-            <th>Humidity (%)</th>
-            <td id="humidity"></td>
-        </tr>
-        <tr>
-            <th>Battery Level (%)</th>
-            <td id="battery_level"></td>
-        </tr>
-        <tr>
-            <th>Timestamp</th>
-            <td id="timestamp"></td>
-        </tr>
-    </table>
 </body>
+
 </html>
+
