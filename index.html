@@ -25,11 +25,28 @@
         }
         .navigation {
             margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
         }
         .arrow {
             cursor: pointer;
             font-size: 24px;
             margin: 0 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
         }
     </style>
 </head>
@@ -67,6 +84,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
     <script>
+        // Конфигурация Firebase, перенесенная из config.js
        
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
@@ -132,5 +150,3 @@
     </script>
 </body>
 </html>
-
-
