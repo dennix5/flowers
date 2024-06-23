@@ -129,9 +129,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
     <script>
-        // Конфигурация Firebase
-
-
         // Инициализация Firebase
         firebase.initializeApp(firebaseConfig);
 
@@ -144,14 +141,14 @@
             {
                 temperature: 25,
                 humidity: 65,
-                battery_level: 50,
+                soil_moisture: 40,
                 timestamp: "2024-06-25 12:00:00",
                 imageUrl: "plant-image.jpg"
             },
             {
                 temperature: 28,
                 humidity: 60,
-                battery_level: 55,
+                soil_moisture: 45,
                 timestamp: "2024-06-25 14:00:00",
                 imageUrl: "plant-image2.jpg"
             }
@@ -171,8 +168,8 @@
             plantImage.src = data.imageUrl;
             temperatureElem.textContent = data.temperature;
             humidityElem.textContent = data.humidity;
-            soilMoistureElem.textContent = data.soil_moisture || '--';
-            lastUpdateElem.textContent = data.timestamp || '--';
+            soilMoistureElem.textContent = data.soil_moisture;
+            lastUpdateElem.textContent = data.timestamp;
         }
 
         // Инициализация данных
@@ -198,5 +195,3 @@
 </body>
 
 </html>
-
-
