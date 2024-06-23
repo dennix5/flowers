@@ -124,78 +124,81 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
     <script>
-     
-        // Инициализация Firebase
-        firebase.initializeApp(firebaseConfig);
+    <script>
+    // Конфигурация Firebase
+    var firebaseConfig = {
+        apiKey: "Ваш_API_ключ",
+        authDomain: "Ваш_ID_проекта.firebaseapp.com",
+        databaseURL: "https://Ваш_ID_проекта-default-rtdb.firebaseio.com",
+        projectId: "Ваш_ID_проекта",
+        storageBucket: "Ваш_ID_проекта.appspot.com",
+        messagingSenderId: "Ваш_ID_отправителя",
+        appId: "Ваш_ID_приложения"
+    };
 
-        // Ссылки на базу данных Firebase
-        var database = firebase.database();
-        var plantDataRef = database.ref('/plant_data');
+    // Инициализация Firebase
+    firebase.initializeApp(firebaseConfig);
 
-        // Функция для обновления данных на веб-странице
-        function updateData(data) {
-            document.getElementById('temperature').innerText = data.temperature || '--';
-            document.getElementById('humidity').innerText = data.humidity || '--';
-            document.getElementById('soil-moisture').innerText = data.soil_moisture || '--';
-            document.getElementById('last-update').innerText = data.timestamp || '--';
+    // Ссылка на базу данных Firebase
+    var database = firebase.database();
+    var plantDataRef = database.ref('/plant_data');
+
+    // Данные о разных растениях (для примера)
+    const plantData = [
+        {
+            temperature: 25,
+            humidity: 65,
+            battery_level: 50,
+            timestamp: "2024-06-25 12:00:00",
+            imageUrl: "plant-image.jpg"
+        },
+        {
+            temperature: 28,
+            humidity: 60,
+            battery_level: 55,
+            timestamp: "2024-06-25 14:00:00",
+            imageUrl: "plant-image2.jpg"
         }
+        // Добавьте данные о других растениях здесь
+    ];
 
-        // Получение данных о растениях из Firebase
-        plantDataRef.on('value', function (snapshot) {
-            var data = snapshot.val();
-            updateData(data);
-        });
+    let currentIndex = 0;
+    const plantImage = document.getElementById("plantImage");
+    const temperatureElem = document.getElementById("temperature");
+    const humidityElem = document.getElementById("humidity");
+    const batteryLevelElem = document.getElementById("battery_level");
+    const timestampElem = document.getElementById("timestamp");
 
-        // Данные о различных растениях (пример данных)
-        const plantData = [
-            {
-                temperature: 25,
-                humidity: 65,
-                soil_moisture: 40,
-                timestamp: "2024-06-25 12:00:00",
-                imageUrl: "flower.jpg"
-            },
-            {
-                temperature: 28,
-                humidity: 60,
-                soil_moisture: 45,
-                timestamp: "2024-06-25 14:00:00",
-                imageUrl: "flower2.jpg"
-            }
-            // Добавьте данные о других растениях здесь
-        ];
+    function updatePlantData(index) {
+        const data = plantData[index];
+        plantImage.src = data.imageUrl;
+        temperatureElem.textContent = data.temperature;
+        humidityElem.textContent = data.humidity;
+        batteryLevelElem.textContent = data.battery_level;
+        timestampElem.textContent = data.timestamp;
+    }
 
-        let currentIndex = 0;
-        const plantImage = document.querySelector('.plant-image');
-        const temperatureElem = document.getElementById('temperature');
-        const humidityElem = document.getElementById('humidity');
-        const soilMoistureElem = document.getElementById('soil-moisture');
-        const lastUpdateElem = document.getElementById('last-update');
+    // Инициализация данных
+    updatePlantData(currentIndex);
 
-        // Функция для обновления данных о текущем растении
-        function updatePlantData(index) {
-            const data = plantData[index];
-            plantImage.src = data.imageUrl;
-            temperatureElem.textContent = data.temperature;
-            humidityElem.textContent = data.humidity;
-            soilMoistureElem.textContent = data.soil_moisture;
-            lastUpdateElem.textContent = data.timestamp;
-        }
-
-        // Инициализация данных
+    // Обработчики для стрелок вправо и влево
+    document.getElementById("prev").addEventListener("click", function() {
+        currentIndex = (currentIndex - 1 + plantData.length) % plantData.length;
         updatePlantData(currentIndex);
+    });
 
-        // Обработчики для кнопок "Предыдущий" и "Следующий"
-        document.getElementById('prev').addEventListener('click', function () {
-            currentIndex = (currentIndex - 1 + plantData.length) % plantData.length;
-            updatePlantData(currentIndex);
-        });
+    document.getElementById("next").addEventListener("click", function() {
+        currentIndex = (currentIndex + 1) % plantData.length;
+        updatePlantData(currentIndex);
+    });
 
-        document.getElementById('next').addEventListener('click', function () {
-            currentIndex = (currentIndex + 1) % plantData.length;
-            updatePlantData(currentIndex);
-        });
-    </script>
+    // Слушаем изменения в базе данных Firebase
+    plantDataRef.on('value', function (snapshot) {
+        var data = snapshot.val();
+        updatePlantData(currentIndex); // Обновляем текущие данные при изменении в Firebase
+    });
+</script>
+
 </body>
 
 </html>
