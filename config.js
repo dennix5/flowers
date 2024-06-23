@@ -8,5 +8,14 @@ const firebaseConfig = {
     messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
     appId: process.env.FIREBASE_APP_ID
 };
-
+// Конфигурация Firebase
+        var firebaseConfig = {
+            apiKey: "AIzaSyDglK2TjHEchfN23w5b5cW1ytiXqlYpBQs",
+            authDomain: "flowers-8ef09.firebaseapp.com",
+            databaseURL: "https://flowers-8ef09-default-rtdb.firebaseio.com",
+            projectId: "flowers-8ef09",
+            storageBucket: "flowers-8ef09.appspot.com",
+            messagingSenderId: "155445589489",
+            appId: 
+        };
 export default firebaseConfig;
