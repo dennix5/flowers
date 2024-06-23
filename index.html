@@ -1,1 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Monitor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script>
+        // Конфигурация Firebase
+        var firebaseConfig = {
+            apiKey: "your_api_key",
+            authDomain: "your_project_id.firebaseapp.com",
+            databaseURL: "https://your_project_id.firebaseio.com",
+            projectId: "your_project_id",
+            storageBucket: "your_project_id.appspot.com",
+            messagingSenderId: "your_messaging_sender_id",
+            appId: "your_app_id"
+        };
+        // Инициализация Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        function getPlantData() {
+            var database = firebase.database();
+            var ref = database.ref('/plant_data');
+            ref.on('value', function(snapshot) {
+                var data = snapshot.val();
+                document.getElementById('temperature').innerText = data.temperature;
+                document.getElementById('humidity').innerText = data.humidity;
+                document.getElementById('battery_level').innerText = data.battery_level;
+                document.getElementById('timestamp').innerText = data.timestamp;
+            });
+        }
+
+        window.onload = function() {
+            getPlantData();
+        }
+    </script>
+</head>
+<body>
+    <h1>Plant Data Monitor</h1>
+    <table>
+        <tr>
+            <th>Temperature (°C)</th>
+            <td id="temperature"></td>
+        </tr>
+        <tr>
+            <th>Humidity (%)</th>
+            <td id="humidity"></td>
+        </tr>
+        <tr>
+            <th>Battery Level (%)</th>
+            <td id="battery_level"></td>
+        </tr>
+        <tr>
+            <th>Timestamp</th>
+            <td id="timestamp"></td>
+        </tr>
+    </table>
+</body>
+</html>
 
