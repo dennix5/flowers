@@ -170,8 +170,8 @@
         const plantImage = document.querySelector('.plant-image');
         const temperatureElem = document.getElementById('temperature');
         const humidityElem = document.getElementById('humidity');
-        const batteryLevelElem = document.getElementById('battery_level');
-        const timestampElem = document.getElementById('timestamp');
+        const soilMoistureElem = document.getElementById('soil-moisture');
+        const lastUpdateElem = document.getElementById('last-update');
 
         // Функция для обновления данных о текущем растении
         function updatePlantData(index) {
@@ -179,8 +179,8 @@
             plantImage.src = data.imageUrl;
             temperatureElem.textContent = data.temperature;
             humidityElem.textContent = data.humidity;
-            batteryLevelElem.textContent = data.battery_level;
-            timestampElem.textContent = data.timestamp;
+            soilMoistureElem.textContent = data.soil_moisture || '--';
+            lastUpdateElem.textContent = data.timestamp || '--';
         }
 
         // Инициализация данных
@@ -206,3 +206,5 @@
 </body>
 
 </html>
+
+
