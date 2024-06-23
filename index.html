@@ -1,153 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plant Monitor</title>
+    <title>Smart Plant Soil Moisture Monitor</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
         }
+
         .container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
-        .data-container {
-            width: 80%;
-            margin-top: 20px;
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
         }
+
+        h1 {
+            color: #4CAF50;
+        }
+
         .plant-image {
-            max-width: 100%;
-            height: auto;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            display: block;
         }
-        .navigation {
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-between;
-            width: 80%;
-        }
-        .arrow {
-            cursor: pointer;
-            font-size: 24px;
-            margin: 0 10px;
-        }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-        th, td {
+
+        th,
+        td {
             padding: 10px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
+
         th {
             background-color: #4CAF50;
             color: white;
         }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.8em;
+            color: #888;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <h1>Plant Data Monitor</h1>
-        <div class="data-container">
-            <img src="plant-image.jpg" alt="Растение" class="plant-image" id="plantImage">
-            <table id="plantData">
-                <tr>
-                    <th>Temperature (°C)</th>
-                    <td id="temperature">25</td>
-                </tr>
-                <tr>
-                    <th>Humidity (%)</th>
-                    <td id="humidity">65</td>
-                </tr>
-                <tr>
-                    <th>Battery Level (%)</th>
-                    <td id="battery_level">50</td>
-                </tr>
-                <tr>
-                    <th>Timestamp</th>
-                    <td id="timestamp">2024-06-25 12:00:00</td>
-                </tr>
-            </table>
-        </div>
-        <div class="navigation">
-            <span class="arrow" id="prev">&lt; Предыдущий</span>
-            <span class="arrow" id="next">Следующий &gt;</span>
+        <header>
+            <h1>Smart Plant Soil Moisture Monitor</h1>
+            <img src="flower.jpg" alt="Plant" class="plant-image">
+        </header>
+
+        <table>
+            <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Temperature (°C)</td>
+                <td id="temperature">--</td>
+            </tr>
+            <tr>
+                <td>Humidity (%)</td>
+                <td id="humidity">--</td>
+            </tr>
+            <tr>
+                <td>Soil Moisture (%)</td>
+                <td id="soil-moisture">--</td>
+            </tr>
+            <tr>
+                <td>Last Update</td>
+                <td id="last-update">--</td>
+            </tr>
+        </table>
+
+        <div class="footer">
+            &copy; 2024 Smart Plant Soil Monitor. All rights reserved.
         </div>
     </div>
-    
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
     <script>
-   
-    // Инициализация Firebase
-    firebase.initializeApp(firebaseConfig);
+// Конфигурация Firebase, перенесенная из config.js
+        var firebaseConfig = {
+            apiKey: "AIzaSyDglK2TjHEchfN23w5b5cW1ytiXqlYpBQs",
+            authDomain: "flowers-8ef09.firebaseapp.com",
+            databaseURL: "https://flowers-8ef09-default-rtdb.firebaseio.com",
+            projectId: "flowers-8ef09",
+            storageBucket: "flowers-8ef09.appspot.com",
+            messagingSenderId: "your_firebase_messaging_sender_id",
+            appId: "1:155445589489:web:dc7f1a5c3064b3f282e5c5"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
 
-    // Ссылка на базу данных Firebase
-    var database = firebase.database();
-    var plantDataRef = database.ref('/plant_data');
+        // Firebase references
+        var database = firebase.database();
+        var plantDataRef = database.ref('/plant_data');
 
-    // Данные о разных растениях (для примера)
-    const plantData = [
-        {
-            temperature: 25,
-            humidity: 65,
-            battery_level: 50,
-            timestamp: "2024-06-25 12:00:00",
-            imageUrl: "flower.jpg"
-        },
-        {
-            temperature: 28,
-            humidity: 60,
-            battery_level: 55,
-            timestamp: "2024-06-25 14:00:00",
-            imageUrl: "plant-image2.jpg"
+        // Function to update data on the web page
+        function updateData(data) {
+            document.getElementById('temperature').innerText = data.temperature || '--';
+            document.getElementById('humidity').innerText = data.humidity || '--';
+            document.getElementById('soil-moisture').innerText = data.soil_moisture || '--';
+            document.getElementById('last-update').innerText = data.timestamp || '--';
         }
-        // Добавьте данные о других растениях здесь
-    ];
 
-    let currentIndex = 0;
-    const plantImage = document.getElementById("plantImage");
-    const temperatureElem = document.getElementById("temperature");
-    const humidityElem = document.getElementById("humidity");
-    const batteryLevelElem = document.getElementById("battery_level");
-    const timestampElem = document.getElementById("timestamp");
-
-    function updatePlantData(index) {
-        const data = plantData[index];
-        plantImage.src = data.imageUrl;
-        temperatureElem.textContent = data.temperature;
-        humidityElem.textContent = data.humidity;
-        batteryLevelElem.textContent = data.battery_level;
-        timestampElem.textContent = data.timestamp;
-    }
-
-    // Инициализация данных
-    updatePlantData(currentIndex);
-
-    // Обработчики для стрелок вправо и влево
-    document.getElementById("prev").addEventListener("click", function() {
-        currentIndex = (currentIndex - 1 + plantData.length) % plantData.length;
-        updatePlantData(currentIndex);
-    });
-
-    document.getElementById("next").addEventListener("click", function() {
-        currentIndex = (currentIndex + 1) % plantData.length;
-        updatePlantData(currentIndex);
-    });
-
-    // Слушаем изменения в базе данных Firebase
-    plantDataRef.on('value', function (snapshot) {
-        var data = snapshot.val();
-        updatePlantData(currentIndex); // Обновляем текущие данные при изменении в Firebase
-    });
-</script>
-
+        // Listening for changes in Firebase database
+        plantDataRef.on('value', function (snapshot) {
+            var data = snapshot.val();
+            updateData(data);
+        });
+    </script>
 </body>
+
 </html>
 
