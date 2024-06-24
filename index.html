@@ -117,8 +117,8 @@
         function updateData(data) {
             document.getElementById('temperature').innerText = data.temperature || '--';
             document.getElementById('humidity').innerText = data.humidity || '--';
-            document.getElementById('soil-moisture').innerText = data.soil_moisture || '--';
-            document.getElementById('last-update').innerText = data.batteryLevel || '--';
+            document.getElementById('batteryLevel').innerText = data.batteryLevel || '--';
+            document.getElementById('timestamp').innerText = data.timestamp || '--';
         }
 
         // Listening for changes in Firebase database
