@@ -104,9 +104,9 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
     <script>
-// Конфигурация Firebase, перенесенная из config.js
-  var firebaseConfig = {
-            apiKey: "AIzaSyDglK2TjHEchfN23w5b5cW1ytiXqlYpBQs",
+        // Конфигурация Firebase
+        var firebaseConfig = {
+            apiKey: "Ваш_API_ключ",
             authDomain: "flowers-8ef09.firebaseapp.com",
             databaseURL: "https://flowers-8ef09-default-rtdb.firebaseio.com",
             projectId: "flowers-8ef09",
@@ -114,7 +114,8 @@
             messagingSenderId: "your_firebase_messaging_sender_id",
             appId: "1:155445589489:web:dc7f1a5c3064b3f282e5c5"
         };
-        // Initialize Firebase
+
+        // Инициализация Firebase
         firebase.initializeApp(firebaseConfig);
 
         // Firebase references
@@ -125,8 +126,8 @@
         function updateData(data) {
             document.getElementById('temperature').innerText = data.temperature || '--';
             document.getElementById('humidity').innerText = data.humidity || '--';
-            document.getElementById('batteryLevel').innerText = data.batteryLevel || '--';
-            document.getElementById('timestamp').innerText = data.timestamp || '--';
+            document.getElementById('batteryLevel').innerText = data.battery_level || '--';
+            document.getElementById('last-update').innerText = data.timestamp || '--';
         }
 
         // Listening for changes in Firebase database
@@ -138,4 +139,3 @@
 </body>
 
 </html>
-
