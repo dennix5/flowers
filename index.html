@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Plant Soil Moisture Monitor</title>
+    <title>Умный монитор влажности почвы растений</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -68,35 +68,35 @@
 <body>
     <div class="container">
         <header>
-            <h1>Smart Plant Soil Moisture Monitor</h1>
-            <img src="flower.jpg" alt="Plant" class="plant-image">
+            <h1>Умный монитор влажности почвы растений</h1>
+            <img src="flower.jpg" alt="Растение" class="plant-image">
         </header>
 
         <table>
             <tr>
-                <th>Parameter</th>
-                <th>Value</th>
+                <th>Параметр</th>
+                <th>Значение</th>
             </tr>
             <tr>
-                <td>Temperature (°C)</td>
+                <td>Температура (°C)</td>
                 <td id="temperature">--</td>
             </tr>
             <tr>
-                <td>Humidity (%)</td>
+                <td>Влажность (%)</td>
                 <td id="humidity">--</td>
             </tr>
             <tr>
-                <td>BatteryLevel (%)</td>
+                <td>Заряд батареи (%)</td>
                 <td id="batteryLevel">--</td>
             </tr>
             <tr>
-                <td>Last Update</td>
+                <td>Последнее обновление</td>
                 <td id="last-update">--</td>
             </tr>
         </table>
 
         <div class="footer">
-            &copy; 2024 Smart Plant Soil Monitor. All rights reserved.
+            &copy; 2024 Умный монитор влажности почвы растений. Все права защищены.
         </div>
     </div>
 
@@ -111,18 +111,18 @@
             databaseURL: "https://flowers-8ef09-default-rtdb.firebaseio.com",
             projectId: "flowers-8ef09",
             storageBucket: "flowers-8ef09.appspot.com",
-            messagingSenderId: "your_firebase_messaging_sender_id",
+            messagingSenderId: "ваш_ID_отправителя_Firebase",
             appId: "1:155445589489:web:dc7f1a5c3064b3f282e5c5"
         };
 
         // Инициализация Firebase
         firebase.initializeApp(firebaseConfig);
 
-        // Firebase references
+        // Ссылки на Firebase
         var database = firebase.database();
         var plantDataRef = database.ref('/plant_data');
 
-        // Function to update data on the web page
+        // Функция для обновления данных на веб-странице
         function updateData(data) {
             document.getElementById('temperature').innerText = data.temperature || '--';
             document.getElementById('humidity').innerText = data.humidity || '--';
@@ -130,8 +130,8 @@
             document.getElementById('last-update').innerText = data.timestamp || '--';
         }
 
-        // Listening for changes in Firebase database
-        plantDataRef.on('value', function (snapshot) {
+        // Слушаем изменения в базе данных Firebase
+        plantDataRef.on('value', function(snapshot) {
             var data = snapshot.val();
             updateData(data);
         });
@@ -139,3 +139,4 @@
 </body>
 
 </html>
+
